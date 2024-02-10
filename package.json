@@ -1,0 +1,16 @@
+{
+  "name": "sureform",
+  "version": "0.0.1",
+  "description": "Améliore l'expérience utilisateur sur les formulaires avec validation côté client, accessibilité et personnalisation.",
+  "main": "index.js",
+  "keywords": [
+    "form",
+    "validation",
+    "ux",
+    "accessibility",
+    "tailwind",
+    "javascript"
+  ],
+  "author": "Hugo DOUEIL",
+  "license": "MIT"
+}

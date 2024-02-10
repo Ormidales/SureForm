@@ -1,20 +1,12 @@
 (function() {
     'use strict';
-    var sureform = {
-        version: "0.0.1"
+    var module_infos = {
+        version: "0.0.1",
+        author: "Hugo DOUEIL",
+        license: "MIT",
+        date_created: "10 Février 2024",
+        date_last_updated: "10 Février 2024"
     };
-    
-    // Export the sureform object for **Node.js**, with
-    // backwards-compatibility for the old `require()` API. If we're in
-    // the browser, add `sureform` as a global object.
-    if (typeof exports !== 'undefined') {
-        if (typeof module !== 'undefined' && module.exports) {
-        exports = module.exports = sureform;
-        }
-        exports.sureform = sureform;
-    } else {
-        this.sureform = sureform;
-    }
 
     /* Outil d'amélioration de l'expérience utilisateur pour les formulaires avec trois fonctionnalités principales :
     * - Sécurité : empêcher la soumission de formulaires invalides
@@ -238,6 +230,20 @@
                             }
                         });
                     }
+                    if (rule === 'email_available') {
+                        await this.checkEmailAvailability(el.value).then(isAvailable => {
+                            if (!isAvailable) {
+                                this.errors[field] = 'Cet e-mail est déjà utilisé.';
+                            }
+                        });
+                    }
+                    if (rule === 'unique') {
+                        await this.checkUniqueness(el.value).then(isUnique => {
+                            if (!isUnique) {
+                                this.errors[field] = 'Cette valeur est déjà utilisée.';
+                            }
+                        });
+                    }
                 }
             });
         
@@ -246,10 +252,26 @@
         }
         
         // Exemple de méthode pour vérifier la disponibilité d'un nom d'utilisateur
-        // async checkUsernameAvailability(username) {
-        //     // Remplace ceci par ta logique de requête AJAX/HTTP fetch
-        //     // Ici, un exemple qui simule une réponse après un délai
-        //     return new Promise(resolve => setTimeout(() => resolve(false), 500)); // Simule un nom d'utilisateur déjà pris
-        // }
+        async checkUsernameAvailability(username) {
+            // Remplace ceci par ta logique de requête AJAX/HTTP fetch
+            // Ici, un exemple qui simule une réponse après un délai
+            return new Promise(resolve => setTimeout(() => resolve(false), 500)); // Simule un nom d'utilisateur déjà pris
+        }
+
+        // Exemple de méthode pour vérifier la disponibilité d'une adresse e-mail
+        async checkEmailAvailability(email) {
+            // Remplace ceci par ta logique de requête AJAX/HTTP fetch
+            // Ici, un exemple qui simule une réponse après un délai
+            return new Promise(resolve => setTimeout(() => resolve(true), 500)); // Simule un e-mail disponible
+        }
+
+        // Exemple de méthode pour vérifier l'unicité d'une valeur
+        async checkUniqueness(value) {
+            // Remplace ceci par ta logique de requête AJAX/HTTP fetch
+            // Ici, un exemple qui simule une réponse après un délai
+            return new Promise(resolve => setTimeout(() => resolve(true), 500)); // Simule une valeur unique
+        }
     }
+
+    window.SureForm = SureForm;
 })();

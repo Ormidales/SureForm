@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test SureForm</title>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <style>
+        .error-message {
+            color: red;
+        }
+
+        .error {
+            border-color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Formulaire de Test SureForm</h2>
+
+    <form id="testForm">
+        <div>
+            <label for="username">Nom d'utilisateur (requis):</label>
+            <input type="text" id="username" name="username" data-validation="required" class="border border-zinc-500 rounded-md p-2">
+            <!-- Message d'erreur sera inséré ici -->
+        </div>
+        <div>
+            <label for="email">Email (email requis):</label>
+            <input type="text" id="email" name="email" data-validation="required|email" class="border border-zinc-500 rounded-md p-2">
+            <!-- Message d'erreur sera inséré ici -->
+        </div>
+        <div>
+            <label for="password">Mot de passe (min 8 caractères):</label>
+            <input type="password" id="password" name="password" data-validation="required|minlength:8" class="border border-zinc-500 rounded-md p-2">
+            <!-- Message d'erreur sera inséré ici -->
+        </div>
+        <button type="submit">Soumettre</button>
+    </form>
+
+    <script src="../dist/sureform.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('#testForm');
+            const fields = ['username', 'email', 'password'];
+
+            const sureForm = new SureForm(form, fields, {
+                errorClasses: 'border border-red-500', // Personnalisation
+                errorMessageClasses: 'text-red-500 text-sm mt-1', // Personnalisation
+            });
+
+            // Validation Avancée
+            sureForm.addCustomValidation('username', (value) => {
+                if (value === 'testuser') {
+                    return 'Ce nom d’utilisateur ne peut pas être utilisé.';
+                }
+            });
+
+            // Événements
+            // form.addEventListener('beforeValidate', () => console.log('Validation commencée'));
+            // form.addEventListener('afterValidate', () => console.log('Validation réussie'));
+            // form.addEventListener('onError', (e) => console.log('Erreurs de validation détectées', e.detail.errors));
+        });
+    </script>
+</body>
+
+</html>
