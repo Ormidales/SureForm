@@ -15,7 +15,6 @@ npm install sureform --save
 ```
 
 ## Utilisation
-Explique comment utiliser SureForm avec des exemples de code pour différentes configurations et cas d'usage.
 Pour utiliser SureForm, créez une instance de `SureForm` en passant l'élément de formulaire et les champs à valider.
 
 ```javascript
