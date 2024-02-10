@@ -34,16 +34,20 @@
         }
 
         init() {
-            this.form.addEventListener('submit', async (e) => {
-                e.preventDefault(); // Empêche la soumission du formulaire le temps de la validation
-                const isValid = this.validate(); // Validation synchrone
-                const isValidAsync = await this.validateAsync(); // Validation asynchrone
-                if (isValid && isValidAsync) {
-                    this.form.submit(); // Soumet le formulaire si tout est valide
-                } else {
-                    this.displayErrors();
-                }
-            });
+            if (!this.initialized) {
+                this.form.addEventListener('submit', async (e) => {
+                    e.preventDefault(); // Empêche la soumission du formulaire le temps de la validation
+                    this.removeErrors(); // Assure-toi que cette ligne est bien ici
+                    const isValid = this.validate(); // Validation synchrone
+                    const isValidAsync = await this.validateAsync(); // Validation asynchrone
+                    if (isValid && isValidAsync) {
+                        this.form.submit(); // Soumet le formulaire si tout est valide
+                    } else {
+                        this.displayErrors();
+                    }
+                });
+                this.initialized = true; // Ajoute un marqueur pour éviter la réinitialisation
+            }
         }
 
         emitEvent(eventName, detail = {}) {
@@ -167,8 +171,10 @@
         }
 
         displayErrors() {
+            this.removeErrors(); // Appelle cette méthode pour nettoyer les erreurs précédentes
+
             let firstErrorField = null;
-        
+
             this.fields.forEach((field) => {
                 const el = this.form.querySelector(`[name="${field}"]`);
                 const error = this.errors[field];
@@ -177,16 +183,18 @@
                     el.classList.add(...this.defaultOptions.errorClasses.split(' '));
                     const errorEl = document.createElement('div');
                     errorEl.className = this.defaultOptions.errorMessageClasses; // Utilise les classes Tailwind pour les messages d'erreur
+                    // On donne la classe 'error-message' pour la retrouver facilement
+                    errorEl.classList.add('error-message');
                     // Affiche un message d'erreur personnalisé s'il est défini, sinon utilise le message d'erreur par défaut
                     errorEl.innerHTML = this.defaultOptions.customMessages[field] ? this.defaultOptions.customMessages[field] : error;
                     el.parentNode.insertBefore(errorEl, el.nextSibling);
-        
+
                     if (!firstErrorField) {
                         firstErrorField = el;
                     }
                 }
             });
-        
+
             if (firstErrorField) {
                 firstErrorField.focus();
             }
@@ -203,10 +211,12 @@
         removeErrors() {
             this.fields.forEach((field) => {
                 const el = this.form.querySelector(`[name="${field}"]`);
-                this.removeErrorForField(el);
+                el.classList.remove(...this.defaultOptions.errorClasses.split(' '));
+                const errorEl = el.parentNode.querySelector('.error-message');
+                if (errorEl) {
+                    errorEl.remove();
+                }
             });
-            // Nettoie également le conteneur d'erreur ARIA-live
-            this.errorContainer.innerHTML = '';
         }
 
         reset() {
